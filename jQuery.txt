@@ -1,0 +1,240 @@
+http://www.jquery.com/    http://www.jquery123.com/1、JQ是通过JS写出来的，是个JS库，它的好处如下:
+a、简化了JS的复杂操作
+b、不需要关注兼容性
+c、提供了大量的实用方法
+
+2、如何学习JQ:
+a、www.jquery.com
+b、JQ只是个辅助工具，要正确面对（学习JQ的同时，要学好原生JS）
+c、需要分阶段学习
+
+3、JQ设计思想：
+a、选择网页元素很方便($(对象或者元素，对象不加引号，元素要加引号))
+var div1 = document.getElementById('div');
+$(div1).css('background','red');
+$('#div').css('background','red');
+$('div').css('background','red');
+$('.div').css('background','red');
+
+独有的选择方法：
+$('li:first').css('background','red');
+$('li:even').css('background','red'); 偶数行（从0开始计数）
+$('li:odd').css('background','red');奇数行（从0开始计数）
+
+$('li').filter('.box').css('background','red');//filter:过滤、筛选
+
+链式调用：(核心：在当前方法下，return this)
+$(this).addClass('active').siblings('li').removeClass('active');//只给当前加active，其他的兄弟元素不加
+b、JQ写法：函数化
+
+c、JQ与JS的关系：可以共存，不能混用
+
+---------------------------------------------------------------------12.7  JQ
+1、el.innerHTML = $('#DIV1').html();
+
+2、调用函数采用
+$(function(){
+
+});
+
+$(function(形参){
+
+})（实参）;
+
+3、取值与赋值：
+括号中有参数时是赋值，没有参数时是取值；
+
+4、css（）：对某个元素的样式可读可写
+
+括号中一个参数时，如果是字符串，就是直接获取（属性名）；如果是对象，就是批量设置；
+
+括号中2个参数时是设置；obj.css('key','val');
+
+5、eq() 下标
+		
+加了下标[]之后JQ对象会变成原生对象，如果要用JQ的方法，要用$()包一下
+		
+所有JQ的方法基本在JQ对象下才能使用（除工具方法以外都是JQ对象）
+		
+$('*')  获取所有元素		
+		
+[name|="value"] :  获取有name属性=value值或者以value-开头的元素		
+		
+[name="vlaue"]:获取有name属性=value值的元素
+		
+[name*="value"]:获取有name属性=所有包含value值的元素
+		
+[name!="value"]:获取有name属性不包含value值的元素
+		
+[name~="value"]:获取有name属性=value值的元素||获取有name属性空格value值的元素
+		
+[name$="value"]:获取以value结尾的元素
+		 
+[name^="value"]：获取以value开头的元素
+
+6、伪类：
+$('input:submit') 找到input中为submit的元素 
+
+$('input:checked') 找到input为选中的元素
+
+li:gt(index)  找到大于索引的元素
+			
+li:lt(index)  找到小于索引的元素
+
+7、JQ事件：不带on和带on两种
+
+$('li').click(function(){
+	alert($(this).index('li'));
+});
+
+$('li').on('click',click);（第二个click为函数名）
+
+8、attr属性：
+一个参数为获取属性，两个参数为设置属性；
+($('#div1').attr('id')/$('#div1').attr('index','0');
+
+9、val属性：（value值）
+$.val()  获取/$.val('value值') 设置
+
+10、css()设置属性时，如果里面是一个属性，可以直接设置，也可以用对象包起来，如果是多个属性，必须用对象包起来；
+$('li').css('position','absolute');/$('li').css({position:'absolute'});
+$(e).css({
+	left:$(e).offset().left,
+	top:$(e).offset().top
+})
+11、prop():专门用来读写checked的，一般都用来判断checkbox的真假
+
+12、下面三个括号里面为空，就是直接调用，只能读；括号中传入字符串就是写；
+text()：专门操作文字内容，就算写上标签也会转成字符串放到元素中
+html() -> innerHTML
+
+val() ->  只能操作表单元素
+
+13、noGlobal：因为在低版本浏览器下undefined会被修改，那么当函数没有传参的时候，就是undefined，一定不会被修改
+14、用JQ创建的方法，让别人用的时候可以不用new(也就是无new化操作)
+
+---------------------------------------------------------------------12.8  JQ
+1、节点选取：
+first()/last()  用来选取一堆元素中的第一个和最后一个 （只对子级） 
+$('li').first().css('background','red');/$('li').last().css('background','yellow'); 
+               
+slice(start,end)  截取中间的几个 $('li').slice(1,4).css('background','pink');
+						
+children(筛选)：如果有指定的子元素要获取，那么括号中可以筛选。
+$('li').children('[name="p"]').css('background','skyblue');				
+			
+find():找到某个元素下的指定的子、孙元素
+$('ul').find('[name="p"]').css('background','skyblue');
+				
+$('ul li a')建议：var $ul = $('#ul');  //先ul缓存起来，然后通过find去查找，节省性能。
+
+上一个prev()/下一个next()
+$('li').first().next().css('background','green');
+$('li').last().prev().css('background','blue');			
+			
+2、父级节点：
+$(子级).parent()  找到某个子级的父节点				
+$(子级).parents(筛选)  批量查找子级的祖先级节点（筛选：指定的祖先级节点）
+			
+3、$(ele).closest(ele)   只从自身开始查找，找离的最近的父级，如果有自身就找自身。
+$('p[name="p"]').closest('.li').css('background','red');
+
+4、$('<li></li>')  创建元素（添加到父级末尾）
+$父级.append(子级);  如果需要链式操作，那么this是父级;			
+$子级.appendTo(父级)  如果需要链式操作，那么this是子级
+
+$li.appendTo($('#ul')).click(function(){
+	$(this).css('background','red');
+})
+
+5、在前面或者后面添加元素：
+
+$('#ul').before($li)
+$(添加到谁的前面).before(添加谁)
+
+$li.insertBefore($('#ul'))
+(添加谁).insertBefore$(添加到谁的前面)
+
+$('#ul').after($li);
+$(添加到谁的后面).after(添加谁);
+
+$li.insertAfter($('#ul'));
+(添加谁).insertBefore$(添加到谁的后面)
+
+子级.prependTo(父级)
+父级.prepend(子级)
+
+6、从某个元素前面删除元素
+要删除谁.remove();$('li').first().remove();   
+
+
+7、clone(true) 克隆内容和事件（注意：原生的只能克隆内容，不能克隆事件）
+			
+JQ中的clone(true)就可以克隆事件，不加true连内容也能克隆。
+例子:点击第一个和后面克隆的都会弹出1
+$('li').first().click(function(){
+	alert(1)
+ });
+var a = $('li').first().clone(true);
+a.appendTo($('#ul'))
+
+----------------------------------------------------------------------12.09
+
+1、index()：索引。推荐使用第二种，限制范围不容易出错
+$(this).index();如果括号中没参数，就表示父级下的第几个子元素（兄弟排行）
+$(this).index('nav div');括号中有参数，就表示给元素加了个范围，在这个范围中依次按照顺序输出序号
+
+2、添加或者删除属性：$('ele').addClass('active');/$('ele').removeClass('active');
+
+也可以直接显示或隐藏属性：$('ele').show();/$('ele').hide();
+
+3、遍历：$(ele).each(function(i,e){});
+
+each里面的e为原生对象，一般操作一组中每个不同需求时使用each，跳出用return false；
+
+4、包装对象：
+$(包谁).wrap(用什么包); 每一个都被包($('span').wrap('<div class="red">');)
+$(包谁).wrapAll(用什么包); 所有的被包 （$('div').wrapAll('<div class="red">');）
+$('div').wrapInner('<span>123</span>'):span被div包，div的内容也被span包了
+$('span').unwrap();  把span的外壳删掉
+
+5、原生于JQ互转：
+原生对象转JQ对象：用$()包一下就转成JQ对象了JQ对象转原生对象:用[下标值] | get(下标值)
+
+6、BOM：获取宽高：
+
+$('#div').width() / $('#div').height()   不算padding和border
+			
+$('#div').innerWidth() / $('#div').innerHeight() 就是clientWidth/clientHeight (元素隐藏也能获取到)，有padding没有border
+
+$('#div').outerWidth(200)在参数里面传入数的时候就是设置，$('#div').outerWidth(200)设置的时候只是设置元素可视区的宽高，不带margin值，只有获取的时候带margin值。（获取的时候里面的数值要改为true）
+
+$(window)|$(document) 获取的时候都不加引号
+
+7、设置滚动距离 ：
+
+$(document).click(function(){
+	$('html,body').animate({
+		scrollTop:0
+	});
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
